@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Transaction;
+use Illuminate\Http\Request;
+
+class OrderController extends Controller
+{
+    /**
+     * Menampilkan daftar semua pesanan pelanggan di panel admin.
+     */
+    public function index()
+    {
+        // Tarik semua data transaksi dari database, urutkan dari yang terbaru
+        $orders = Transaction::latest()->get();
+
+        // Kirimkan data transaksi dengan variabel bernama $orders ke view
+        return view('admin.orders.index', compact('orders'));
+    }
+
+    /**
+     * Memperbarui status transaksi.
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|string',
+        ]);
+
+        $order = Transaction::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->route('admin.orders.index')->with('success', 'Status pesanan #' . $order->order_id . ' berhasil diperbarui!');
+    }
+}
