@@ -54,5 +54,35 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Kursi santai estetik dengan anyaman rotan asli, cocok untuk teras rumah.'
             ]
         );
+
+        Product::updateOrCreate(
+            ['name' => 'Lemari Pajangan Mahoni'],
+            [
+                'category_id' => Category::where('name', 'Kayu')->value('id'),
+                'price' => 2750000,
+                'stock' => 6,
+                'description' => 'Lemari pajangan berbahan kayu mahoni dengan ruang penyimpanan luas dan tampilan klasik.'
+            ]
+        );
+
+        Product::updateOrCreate(
+            ['name' => 'Meja Kopi Rotan Bundar'],
+            [
+                'category_id' => Category::where('name', 'Rotan')->value('id'),
+                'price' => 650000,
+                'stock' => 12,
+                'description' => 'Meja kopi bundar dengan anyaman rotan rapi, ringan, dan cocok untuk ruang tamu maupun teras.'
+            ]
+        );
+
+        Product::updateOrCreate(
+            ['name' => 'Set Kursi Outdoor Sintetis'],
+            [
+                'category_id' => Category::where('name', 'Sintetis')->value('id'),
+                'price' => 3200000,
+                'stock' => 4,
+                'description' => 'Set kursi outdoor berbahan rotan sintetis tahan cuaca dengan desain modern.'
+            ]
+        );
     }
 }

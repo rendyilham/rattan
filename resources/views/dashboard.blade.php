@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Riwayat Pemesanan - KayuKraft</title>
+    <title>Riwayat Pemesanan - Rattan Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -62,10 +62,10 @@
 <body>
 
     <!-- NAVBAR -->
-    <!-- NAVBAR KAYUKRAFT (SMART NAVIGATION) -->
+    <!-- NAVBAR RATTAN HANDMADE (SMART NAVIGATION) -->
     <nav class="navbar">
         <a href="{{ url('/') }}" class="nav-brand">
-            <span>KAYU</span>KRAFT
+            <span>Rattan</span>Handmade
         </a>
         
         <div class="nav-menu">
@@ -105,7 +105,7 @@
     <main class="customer-container">
         <div class="page-header">
             <h1 class="page-title">Riwayat Pesanan Saya</h1>
-            <p class="page-subtitle">Pantau status transaksi dan riwayat belanja Anda di KayuKraft.</p>
+            <p class="page-subtitle">Pantau status transaksi dan riwayat belanja Anda di Rattan Handmade.</p>
         </div>
 
         <div class="table-card">

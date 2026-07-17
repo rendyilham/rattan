@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pesanan Berhasil - KayuKraft</title>
+    <title>Pesanan Berhasil - Rattan Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@
     <!-- SMART NAVBAR -->
     <nav class="navbar">
         <a href="{{ url('/') }}" class="nav-brand">
-            <span>KAYU</span>KRAFT
+            <span>Rattan</span>Handmade
         </a>
         
         <div class="nav-menu">
@@ -131,11 +131,11 @@
 
             <div class="bank-info">
                 <strong>Bank BCA - 1234 567 890</strong>
-                Atas Nama: KayuKraft Indonesia
+                Atas Nama: Rattan Handmade Indonesia
             </div>
 
             <!-- Tombol Konfirmasi WhatsApp (Otomatis isi pesan) -->
-            <a href="https://wa.me/6281234567890?text=Halo%20Admin%20KayuKraft,%20saya%20ingin%20konfirmasi%20pembayaran%20untuk%20pesanan%20%23{{ $transaction->order_id }}%20sebesar%20Rp{{ number_format($transaction->total_price, 0, '', '') }}." target="_blank" class="btn-wa">
+            <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Rattan%20Handmade,%20saya%20ingin%20konfirmasi%20pembayaran%20untuk%20pesanan%20%23{{ $transaction->order_id }}%20sebesar%20Rp{{ number_format($transaction->total_price, 0, '', '') }}." target="_blank" class="btn-wa">
                 <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 21.082h-.006c-1.637 0-3.243-.44-4.654-1.272l-.334-.2-3.46.907.925-3.374-.219-.348c-.913-1.455-1.396-3.136-1.396-4.856 0-5.043 4.104-9.146 9.148-9.146 2.443 0 4.741.952 6.468 2.68 1.727 1.727 2.678 4.025 2.678 6.469 0 5.044-4.105 9.14-9.148 9.14m0-10.892c-.347-.775-.713-.79-1.042-.805-.265-.012-.569-.012-.873-.012-.304 0-.798.114-1.216.568-.418.455-1.595 1.558-1.595 3.797 0 2.239 1.634 4.404 1.862 4.707.228.304 3.212 4.9 7.778 6.818 1.089.457 1.939.73 2.6.934 1.09.333 2.083.286 2.871.173.882-.126 2.716-1.11 3.096-2.183.38-.1072.38-1.99.266-2.183-.114-.192-.418-.306-.874-.534-.456-.228-2.716-1.341-3.134-1.494-.418-.152-.722-.228-1.026.228-.304.456-1.19 1.494-1.457 1.798-.266.304-.532.342-.988.114-.456-.228-1.937-.714-3.69-2.277-1.365-1.216-2.287-2.717-2.553-3.173-.266-.456-.028-.702.201-.93.205-.204.456-.532.684-.798.228-.266.304-.456.456-.76.152-.304.076-.57-.038-.798-.114-.228-1.026-2.474-1.405-3.386"/></svg>
                 Konfirmasi via WhatsApp
             </a>

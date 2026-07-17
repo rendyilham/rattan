@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Daftar Akun - KayuKraft</title>
+    <title>Daftar Akun - Rattan Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -156,7 +156,7 @@
     <div class="register-card">
         <div class="card-header">
             <a href="{{ url('/') }}" class="brand-logo">
-                <span>KAYU</span>KRAFT
+                <span>Rattan</span>Handmade
             </a>
             <div class="header-subtitle">Bergabunglah dan mulai perjalanan belanja Anda</div>
         </div>
