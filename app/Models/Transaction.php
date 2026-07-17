@@ -9,6 +9,15 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    public const STATUSES = [
+        'Menunggu Pembayaran',
+        'Pembayaran Dikonfirmasi',
+        'Diproses',
+        'Dikirim',
+        'Selesai',
+        'Dibatalkan',
+    ];
+
     // Tambahkan order_id ke dalam fillable
     protected $fillable = ['order_id', 'user_id', 'total_price', 'status'];
 

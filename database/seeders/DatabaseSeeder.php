@@ -15,43 +15,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat Akun Admin
-        User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@tokokayu.com',
-            'password' => Hash::make('password123'),
-            'role' => 'admin',
-        ]);
+        // 1. Buat akun admin khusus untuk guard admin.
+        $this->call(AdminSeeder::class);
 
         // 2. Buat Akun Customer
-        User::create([
-            'name' => 'Pelanggan Setia',
-            'email' => 'customer@tokokayu.com',
-            'password' => Hash::make('password123'),
-            'role' => 'customer',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'customer@tokokayu.com'],
+            [
+                'name' => 'Pelanggan Setia',
+                'password' => Hash::make('password123'),
+                'role' => 'customer',
+            ]
+        );
 
         // 3. Buat Kategori Produk
         $categories = ['Kayu', 'Rotan', 'Sintetis'];
         foreach ($categories as $category) {
-            Category::create(['name' => $category]);
+            Category::firstOrCreate(['name' => $category]);
         }
 
         // 4. Buat Produk Dummy
-        Product::create([
-            'category_id' => 1, // 1 = Kayu
-            'name' => 'Meja Kerja Jati',
-            'price' => 1500000,
-            'stock' => 10,
-            'description' => 'Meja kerja elegan dari kayu jati solid dengan finishing natural.'
-        ]);
+        Product::updateOrCreate(
+            ['name' => 'Meja Kerja Jati'],
+            [
+                'category_id' => Category::where('name', 'Kayu')->value('id'),
+                'price' => 1500000,
+                'stock' => 10,
+                'description' => 'Meja kerja elegan dari kayu jati solid dengan finishing natural.'
+            ]
+        );
 
-        Product::create([
-            'category_id' => 2, // 2 = Rotan
-            'name' => 'Kursi Santai Teras',
-            'price' => 850000,
-            'stock' => 15,
-            'description' => 'Kursi santai estetik dengan anyaman rotan asli, cocok untuk teras rumah.'
-        ]);
+        Product::updateOrCreate(
+            ['name' => 'Kursi Santai Teras'],
+            [
+                'category_id' => Category::where('name', 'Rotan')->value('id'),
+                'price' => 850000,
+                'stock' => 15,
+                'description' => 'Kursi santai estetik dengan anyaman rotan asli, cocok untuk teras rumah.'
+            ]
+        );
     }
 }

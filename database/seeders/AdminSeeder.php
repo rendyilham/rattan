@@ -10,10 +10,12 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        Admin::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@kayukraft.com',
-            'password' => Hash::make('password123'), // Password yang akan digunakan untuk login
-        ]);
+        Admin::updateOrCreate(
+            ['email' => 'admin@kayukraft.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password123'), // Password yang akan digunakan untuk login
+            ]
+        );
     }
 }

@@ -27,20 +27,22 @@ class CartController extends Controller
 
         $product = Product::findOrFail($request->product_id);
 
-        // Cek apakah stok cukup sebelum masuk keranjang
-        if ($product->stock < $request->quantity) {
-            return redirect()->back()->with('error', 'Maaf, stok ' . $product->name . ' tidak mencukupi.');
-        }
-
         // Cek apakah barang sudah ada di keranjang user ini
         $cart = Cart::where('user_id', Auth::id())
                     ->where('product_id', $request->product_id)
                     ->first();
 
+        $newQuantity = $request->quantity + ($cart ? $cart->quantity : 0);
+
+        // Cek total kuantitas agar tidak melebihi stok yang tersedia.
+        if ($product->stock < $newQuantity) {
+            return redirect()->back()->with('error', 'Maaf, stok ' . $product->name . ' tidak mencukupi.');
+        }
+
         if ($cart) {
             // Jika barang sudah ada, cukup tambahkan kuantitasnya
             $cart->update([
-                'quantity' => $cart->quantity + $request->quantity
+                'quantity' => $newQuantity
             ]);
         } else {
             // Jika belum ada, buat entri keranjang baru
