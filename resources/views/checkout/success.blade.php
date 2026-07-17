@@ -4,60 +4,149 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pesanan Berhasil - KayuKraft</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-50 font-sans antialiased">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Navbar Minimalis -->
-    <nav style="background-color: #273353; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-center h-16 items-center">
-                <a href="{{ url('/') }}" style="font-weight: bold; font-size: 1.5rem; letter-spacing: 0.05em; color: white; text-decoration: none;">
-                    <span style="color: #EFC480;">KAYU</span>KRAFT
-                </a>
+    <style>
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
+        html { overflow-y: scroll; }
+        body { background-color: #FDFBF7; color: #1f2937; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* NAVBAR KONSISTEN */
+        .navbar { background-color: #2C4C3B; padding: 16px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-brand { text-decoration: none; font-size: 1.5rem; font-weight: 800; color: white; letter-spacing: 1px; display: flex; align-items: center; }
+        .nav-brand span { color: #EFC480; }
+        .nav-menu { display: flex; align-items: center; gap: 24px; }
+        .nav-link { color: #e2e8f0; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.3s; display: flex; align-items: center; gap: 6px; }
+        .nav-link:hover, .nav-link.active { color: #EFC480; }
+        .nav-link svg { width: 18px; height: 18px; }
+        
+        .user-info { display: flex; align-items: center; gap: 16px; padding-left: 24px; border-left: 1px solid rgba(255,255,255,0.2); }
+        .user-name { font-size: 0.85rem; color: white; font-weight: 700; text-align: right; line-height: 1.2; }
+        .user-name span { display: block; font-size: 0.7rem; color: #cbd5e1; font-weight: 500; }
+        .btn-logout { background-color: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.3s; }
+        .btn-logout:hover { background-color: #dc2626; }
+
+        /* KONTEN SUCCESS */
+        .success-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 20px; }
+        .success-card { background: white; width: 100%; max-width: 540px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb; padding: 40px; text-align: center; }
+        
+        .icon-circle { width: 80px; height: 80px; background-color: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; }
+        .icon-circle svg { width: 40px; height: 40px; }
+        
+        .success-title { font-size: 1.75rem; font-weight: 800; color: #2C4C3B; margin-bottom: 12px; }
+        .success-desc { color: #6b7280; font-size: 0.95rem; margin-bottom: 32px; }
+        .success-desc strong { color: #1f2937; }
+
+        /* ORDER DETAILS BOX */
+        .order-details { background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+        .detail-group { margin-bottom: 16px; }
+        .detail-group:last-child { margin-bottom: 0; padding-top: 16px; border-top: 2px dashed #e5e7eb; }
+        .detail-label { font-size: 0.8rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .detail-value { font-size: 1.25rem; font-weight: 800; color: #2C4C3B; }
+        .detail-value.total { color: #8B5A2B; font-size: 1.5rem; }
+
+        /* BANK INFO */
+        .bank-info { background-color: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 16px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 32px; }
+        .bank-info strong { display: block; font-size: 1rem; color: #b45309; margin-bottom: 4px; }
+
+        /* BUTTONS */
+        .btn-wa { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background-color: #25D366; color: white; padding: 14px; border-radius: 8px; font-weight: 800; font-size: 1rem; text-decoration: none; transition: background 0.3s; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.2); }
+        .btn-wa:hover { background-color: #20bd5a; }
+        
+        .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .btn-outline { background-color: white; color: #4b5563; border: 1px solid #d1d5db; padding: 12px; border-radius: 8px; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+        .btn-outline:hover { background-color: #f9fafb; color: #1f2937; }
+        
+        .btn-primary { background-color: #2C4C3B; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; text-decoration: none; transition: background 0.3s; }
+        .btn-primary:hover { background-color: #1a2f24; }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 16px; padding: 16px; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; }
+            .user-info { border-left: none; padding-left: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.2); width: 100%; justify-content: space-between; }
+            .action-row { grid-template-columns: 1fr; }
+            .success-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SMART NAVBAR -->
+    <nav class="navbar">
+        <a href="{{ url('/') }}" class="nav-brand">
+            <span>KAYU</span>KRAFT
+        </a>
+        
+        <div class="nav-menu">
+            <a href="{{ url('/') }}" class="nav-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Katalog
+            </a>
+            <!-- Tidak ada menu aktif di halaman sukses, karena ini adalah halaman transisi -->
+            <a href="{{ route('cart.index') }}" class="nav-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Keranjang
+            </a>
+            <a href="{{ url('/dashboard') }}" class="nav-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                Riwayat Pemesanan
+            </a>
+            
+            <div class="user-info">
+                <div class="user-name">
+                    <span>Pelanggan,</span>
+                    {{ Auth::user()->name }}
+                </div>
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="btn-logout">Keluar</button>
+                </form>
             </div>
         </div>
     </nav>
 
-    <!-- Konten Konfirmasi -->
-    <div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-xl w-full bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
+    <!-- KONTEN SUCCESS -->
+    <main class="success-wrapper">
+        <div class="success-card">
             
-            <div style="width: 64px; height: 64px; background-color: #dcfce7; color: #16a34a; border-radius: 9999px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
-                <svg style="width: 32px; height: 32px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            <div class="icon-circle">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
             </div>
 
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #273353; margin-bottom: 8px;">Pesanan Berhasil Dibuat!</h2>
-            <p style="color: #4b5563; margin-bottom: 24px; font-size: 0.875rem;">Terima kasih, pesanan Anda telah masuk ke sistem kami dengan status <span style="font-weight: bold; color: #273353;">Menunggu Pembayaran</span>.</p>
+            <h1 class="success-title">Pesanan Berhasil Dibuat!</h1>
+            <p class="success-desc">Terima kasih, pesanan Anda telah masuk ke sistem kami dengan status <strong>Menunggu Pembayaran</strong>.</p>
 
-            <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
-                <p style="font-size: 0.75rem; color: #6b7280; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Nomor Pesanan</p>
-                <p style="font-size: 1.5rem; font-weight: 900; color: #273353; margin-bottom: 16px; margin-top: 0;">{{ $transaction->order_id }}</p>
-                
-                <p style="font-size: 0.75rem; color: #6b7280; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Total Pembayaran</p>
-                <p style="font-size: 1.25rem; font-weight: bold; color: #EFC480; margin-top: 0;">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</p>
-            </div>
-
-            <!-- Area Tombol Aksi yang Dirapikan (KODE KEBAL) -->
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <!-- Tombol WA -->
-                <a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20konfirmasi%20pembayaran%20untuk%20pesanan:%20{{ $transaction->order_id }}" 
-                   target="_blank" 
-                   style="display: flex; justify-content: center; align-items: center; width: 100%; background-color: #22c55e; color: white; font-weight: bold; padding: 12px; border-radius: 6px; text-decoration: none; box-sizing: border-box;">
-                   <!-- Ikon WhatsApp -->
-                   <svg style="width: 20px; height: 20px; margin-right: 8px;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                   Konfirmasi via WhatsApp
-                </a>
-                
-                <!-- Tombol Navigasi -->
-                <div style="display: flex; gap: 16px; width: 100%;">
-                    <a href="{{ url('/dashboard') }}" style="flex: 1; text-align: center; padding: 12px; background-color: white; color: #273353; font-weight: bold; border: 2px solid #273353; border-radius: 6px; text-decoration: none; box-sizing: border-box;">Lihat Riwayat</a>
-                    <a href="{{ url('/') }}" style="flex: 1; text-align: center; padding: 12px; background-color: #273353; color: #EFC480; font-weight: bold; border-radius: 6px; text-decoration: none; box-sizing: border-box;">Kembali ke Katalog</a>
+            <div class="order-details">
+                <div class="detail-group">
+                    <div class="detail-label">Nomor Pesanan</div>
+                    <div class="detail-value">{{ $transaction->order_id }}</div> <!-- Sesuaikan variabel dari controller -->
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Total Pembayaran</div>
+                    <div class="detail-value total">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</div>
                 </div>
             </div>
 
+            <div class="bank-info">
+                <strong>Bank BCA - 1234 567 890</strong>
+                Atas Nama: KayuKraft Indonesia
+            </div>
+
+            <!-- Tombol Konfirmasi WhatsApp (Otomatis isi pesan) -->
+            <a href="https://wa.me/6281234567890?text=Halo%20Admin%20KayuKraft,%20saya%20ingin%20konfirmasi%20pembayaran%20untuk%20pesanan%20%23{{ $transaction->order_id }}%20sebesar%20Rp{{ number_format($transaction->total_price, 0, '', '') }}." target="_blank" class="btn-wa">
+                <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 21.082h-.006c-1.637 0-3.243-.44-4.654-1.272l-.334-.2-3.46.907.925-3.374-.219-.348c-.913-1.455-1.396-3.136-1.396-4.856 0-5.043 4.104-9.146 9.148-9.146 2.443 0 4.741.952 6.468 2.68 1.727 1.727 2.678 4.025 2.678 6.469 0 5.044-4.105 9.14-9.148 9.14m0-10.892c-.347-.775-.713-.79-1.042-.805-.265-.012-.569-.012-.873-.012-.304 0-.798.114-1.216.568-.418.455-1.595 1.558-1.595 3.797 0 2.239 1.634 4.404 1.862 4.707.228.304 3.212 4.9 7.778 6.818 1.089.457 1.939.73 2.6.934 1.09.333 2.083.286 2.871.173.882-.126 2.716-1.11 3.096-2.183.38-.1072.38-1.99.266-2.183-.114-.192-.418-.306-.874-.534-.456-.228-2.716-1.341-3.134-1.494-.418-.152-.722-.228-1.026.228-.304.456-1.19 1.494-1.457 1.798-.266.304-.532.342-.988.114-.456-.228-1.937-.714-3.69-2.277-1.365-1.216-2.287-2.717-2.553-3.173-.266-.456-.028-.702.201-.93.205-.204.456-.532.684-.798.228-.266.304-.456.456-.76.152-.304.076-.57-.038-.798-.114-.228-1.026-2.474-1.405-3.386"/></svg>
+                Konfirmasi via WhatsApp
+            </a>
+
+            <div class="action-row">
+                <a href="{{ url('/dashboard') }}" class="btn-outline">Lihat Riwayat Pemesanan</a>
+                <a href="{{ url('/') }}" class="btn-primary">Kembali ke Katalog</a>
+            </div>
+
         </div>
-    </div>
+    </main>
 
 </body>
 </html>

@@ -10,7 +10,8 @@
 
     <style>
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-        body { background-color: #FDFBF7; color: #1f2937; line-height: 1.6; }
+        html { overflow-y: scroll; }
+        body { background-color: #FDFBF7; color: #1f2937; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
         
         /* NAVBAR */
         .navbar { background-color: #2C4C3B; padding: 16px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
@@ -18,7 +19,7 @@
         .nav-brand span { color: #EFC480; }
         .nav-menu { display: flex; align-items: center; gap: 24px; }
         .nav-link { color: #e2e8f0; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.3s; display: flex; align-items: center; gap: 6px; }
-        .nav-link:hover { color: #EFC480; }
+        .nav-link:hover, .nav-link.active { color: #EFC480; }
         .nav-link svg { width: 18px; height: 18px; }
         
         /* AUTH BUTTONS */
@@ -49,13 +50,14 @@
         .alert-success { background-color: #dcfce7; color: #16a34a; }
         .alert-error { background-color: #fef2f2; color: #dc2626; }
 
-        /* CATALOG SECTION */
-        .catalog { padding: 60px 5%; max-width: 1400px; margin: 0 auto; }
+        /* CATALOG SECTION - DIPERBAIKI */
+        .catalog { padding: 60px 5%; max-width: 1400px; width: 100%; margin: 0 auto; flex: 1; }
         .section-title { font-size: 2rem; font-weight: 800; color: #2C4C3B; margin-bottom: 40px; text-align: center; position: relative; padding-bottom: 16px; }
         .section-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background-color: #EFC480; border-radius: 2px; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px; }
-        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+        /* GRID PRODUK - DIPERBAIKI */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; width: 100%; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; width: 100%; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #EFC480; }
         
         .product-img-placeholder { height: 220px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
@@ -85,6 +87,7 @@
 </head>
 <body>
 
+    <!-- NAVBAR KAYUKRAFT (SMART NAVIGATION) -->
     <nav class="navbar">
         <a href="{{ url('/') }}" class="nav-brand">
             <span>KAYU</span>KRAFT
@@ -92,17 +95,18 @@
         
         <div class="nav-menu">
             @auth
-                <a href="{{ url('/') }}" class="nav-link" style="color: #EFC480;">
+                <!-- Menu akan otomatis menyala (kuning) sesuai halaman yang sedang dibuka -->
+                <a href="{{ url('/') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     Katalog
                 </a>
-                <a href="{{ route('cart.index') }}" class="nav-link">
+                <a href="{{ route('cart.index') }}" class="nav-link {{ request()->routeIs('cart.*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     Keranjang
                 </a>
-                <a href="{{ url('/dashboard') }}" class="nav-link">
+                <a href="{{ url('/dashboard') }}" class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                    Akun Saya
+                    Riwayat Pemesanan
                 </a>
                 
                 <div class="user-info">
