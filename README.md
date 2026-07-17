@@ -134,9 +134,64 @@ Jalankan test:
 php artisan test
 ```
 
+Pengujian yang digunakan:
+
+- Unit test dasar untuk memastikan environment testing berjalan.
+- Feature test autentikasi customer.
+- Feature test profile customer.
+- Feature test proses bisnis:
+  - customer menambahkan produk ke keranjang;
+  - validasi quantity keranjang agar tidak melebihi stok;
+  - checkout membuat transaksi, detail transaksi, mengurangi stok, dan menghapus keranjang;
+  - admin memperbarui status pesanan melalui stored procedure MySQL.
+
 Jalankan migration dan seeder ulang jika ada perubahan database:
 
 ```bash
 php artisan migrate
 php artisan db:seed
 ```
+
+## Debugging dan Evaluasi Kualitas
+
+Beberapa masalah yang ditemukan selama pengembangan:
+
+- Credential GitHub pada komputer berbeda masih memakai akun lama sehingga push ditolak. Solusi: menghapus credential GitHub lama dan login ulang dengan akun repository yang benar.
+- Quantity keranjang sebelumnya hanya mengecek quantity baru, belum menghitung quantity yang sudah ada di keranjang. Solusi: menghitung total quantity baru sebelum menyimpan.
+- Status transaksi sebelumnya hanya divalidasi sebagai string. Solusi: validasi status dibatasi sesuai daftar status resmi pada model `Transaction`.
+- Seeder admin sebelumnya belum konsisten dengan guard admin. Solusi: admin demo dibuat melalui tabel `admins` dan `AdminSeeder`.
+
+## Profiling dan Optimasi
+
+Parameter yang dievaluasi:
+
+- Waktu eksekusi test menggunakan `php artisan test`.
+- Jumlah dan pola query pada controller utama.
+- Risiko N+1 query pada halaman produk dan keranjang.
+- Konsistensi proses checkout ketika terjadi error.
+
+Optimasi yang diterapkan:
+
+- Menggunakan eager loading `Product::with('category')` saat menampilkan produk agar relasi kategori tidak dipanggil berulang.
+- Menggunakan `Cart::with('product')` pada halaman keranjang agar data produk dimuat bersama item keranjang.
+- Membatasi data aktivitas dashboard admin dengan `take(5)`.
+- Menggunakan database transaction pada checkout agar perubahan transaksi, detail transaksi, stok, dan keranjang tetap atomik.
+- Menambahkan unique constraint pada `carts(user_id, product_id)` untuk mencegah duplikasi item keranjang.
+
+## Versioning dan Code Review
+
+Project dikelola menggunakan Git dan GitHub dengan branch utama `main`.
+
+Contoh riwayat perubahan:
+
+- `Initial commit`: inisialisasi project Laravel.
+- `update admin user`: penyesuaian akun dan akses admin.
+- `readme + procedure`: dokumentasi project dan stored procedure transaksi.
+
+Fokus code review:
+
+- memastikan file sensitif seperti `.env`, `vendor`, dan `node_modules` tidak masuk repository;
+- memastikan relasi database memiliki foreign key dan constraint;
+- memastikan input divalidasi sebelum disimpan;
+- memastikan proses checkout memakai rollback ketika terjadi error;
+- memastikan dokumentasi instalasi dan akun demo tersedia di README.
