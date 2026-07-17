@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -84,5 +86,65 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Set kursi outdoor berbahan rotan sintetis tahan cuaca dengan desain modern.'
             ]
         );
+
+        // 5. Buat data pesanan demo untuk dashboard customer dan admin.
+        $customer = User::where('email', 'customer@tokokayu.com')->first();
+
+        $orders = [
+            [
+                'order_id' => 'ORD-DEMO01',
+                'status' => 'Menunggu Pembayaran',
+                'items' => [
+                    ['product' => 'Meja Kopi Rotan Bundar', 'quantity' => 1],
+                    ['product' => 'Kursi Santai Teras', 'quantity' => 2],
+                ],
+            ],
+            [
+                'order_id' => 'ORD-DEMO02',
+                'status' => 'Diproses',
+                'items' => [
+                    ['product' => 'Meja Kerja Jati', 'quantity' => 1],
+                ],
+            ],
+            [
+                'order_id' => 'ORD-DEMO03',
+                'status' => 'Selesai',
+                'items' => [
+                    ['product' => 'Lemari Pajangan Mahoni', 'quantity' => 1],
+                    ['product' => 'Set Kursi Outdoor Sintetis', 'quantity' => 1],
+                ],
+            ],
+        ];
+
+        foreach ($orders as $orderData) {
+            $totalPrice = 0;
+
+            foreach ($orderData['items'] as $item) {
+                $product = Product::where('name', $item['product'])->first();
+                $totalPrice += $product->price * $item['quantity'];
+            }
+
+            $transaction = Transaction::updateOrCreate(
+                ['order_id' => $orderData['order_id']],
+                [
+                    'user_id' => $customer->id,
+                    'total_price' => $totalPrice,
+                    'status' => $orderData['status'],
+                ]
+            );
+
+            $transaction->details()->delete();
+
+            foreach ($orderData['items'] as $item) {
+                $product = Product::where('name', $item['product'])->first();
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'product_id' => $product->id,
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $product->price * $item['quantity'],
+                ]);
+            }
+        }
     }
 }
