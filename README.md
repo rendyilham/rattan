@@ -1,66 +1,142 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RattanHandmade
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+RattanHandmade adalah aplikasi basis data penjualan produk kayu, rotan, dan sintetis berbasis Laravel. Aplikasi ini digunakan untuk mengelola katalog produk, keranjang belanja, checkout, transaksi pelanggan, serta pemantauan pesanan oleh admin.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Autentikasi customer dengan Laravel Breeze.
+- Autentikasi admin menggunakan guard khusus `admin`.
+- CRUD produk oleh admin.
+- Kategori produk.
+- Keranjang belanja per customer.
+- Checkout dengan validasi stok dan database transaction.
+- Pembuatan transaksi dan detail transaksi.
+- Pengurangan stok setelah checkout.
+- Update status pesanan oleh admin melalui stored procedure MySQL.
+- Seeder data awal untuk admin, customer, kategori, dan produk demo.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Struktur Project
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- `routes/web.php`: definisi route publik, customer, dan admin.
+- `app/Models`: representasi entitas database seperti `Product`, `Category`, `Cart`, `Transaction`, dan `TransactionDetail`.
+- `app/Http/Controllers`: modul proses bisnis aplikasi.
+- `database/migrations`: struktur tabel, constraint, dan stored procedure.
+- `database/seeders`: data awal untuk kebutuhan demo dan pengujian.
+- `resources/views`: tampilan Blade untuk customer dan admin.
+- `config/auth.php`: konfigurasi guard customer dan admin.
 
-## Learning Laravel
+## Teknologi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.1
+- Laravel 10
+- MySQL
+- Eloquent ORM
+- Laravel Migration dan Seeder
+- Blade Template
+- Tailwind CSS
+- Vite
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Struktur Database Utama
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- `users`: data customer.
+- `admins`: data pengelola aplikasi.
+- `categories`: kategori produk.
+- `products`: data produk dan stok.
+- `carts`: keranjang belanja customer.
+- `transactions`: data transaksi utama.
+- `transaction_details`: detail produk dalam transaksi.
 
-## Laravel Sponsors
+Relasi utama:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- `categories` 1 ke banyak `products`.
+- `users` 1 ke banyak `carts`.
+- `products` 1 ke banyak `carts`.
+- `users` 1 ke banyak `transactions`.
+- `transactions` 1 ke banyak `transaction_details`.
+- `products` 1 ke banyak `transaction_details`.
 
-### Premium Partners
+## Implementasi Database Programming
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Update status transaksi menggunakan stored procedure MySQL `update_transaction_status`.
 
-## Contributing
+Procedure ini bertugas:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- menerima ID transaksi dan status baru;
+- memvalidasi status agar sesuai daftar status yang diperbolehkan;
+- memastikan transaksi tersedia;
+- memperbarui status dan waktu perubahan transaksi.
 
-## Code of Conduct
+Controller admin memanggil procedure tersebut melalui:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```php
+DB::statement('CALL update_transaction_status(?, ?)', [
+    $order->id,
+    $request->status,
+]);
+```
 
-## Security Vulnerabilities
+## Algoritma Checkout
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Alur checkout berada di `CheckoutController`:
 
-## License
+1. Mengambil seluruh data keranjang customer yang sedang login.
+2. Mengecek apakah keranjang kosong.
+3. Memulai database transaction.
+4. Mengecek ketersediaan stok setiap produk.
+5. Menghitung total harga.
+6. Membuat data transaksi.
+7. Membuat detail transaksi untuk setiap item.
+8. Mengurangi stok produk.
+9. Menghapus data keranjang.
+10. Commit jika berhasil atau rollback jika terjadi error.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Instalasi
+
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+npm run build
+```
+
+Jalankan aplikasi:
+
+```bash
+php artisan serve
+```
+
+## Akun Demo
+
+Admin:
+
+```text
+Email: admin@kayukraft.com
+Password: password123
+URL: /admin/login
+```
+
+Customer:
+
+```text
+Email: customer@tokokayu.com
+Password: password123
+URL: /login
+```
+
+## Verifikasi
+
+Jalankan test:
+
+```bash
+php artisan test
+```
+
+Jalankan migration dan seeder ulang jika ada perubahan database:
+
+```bash
+php artisan migrate
+php artisan db:seed
+```

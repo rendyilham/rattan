@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
@@ -30,8 +31,11 @@ class OrderController extends Controller
         ]);
 
         $order = Transaction::findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
+
+        DB::statement('CALL update_transaction_status(?, ?)', [
+            $order->id,
+            $request->status,
+        ]);
 
         return redirect()->route('admin.orders.index')->with('success', 'Status pesanan #' . $order->order_id . ' berhasil diperbarui!');
     }
