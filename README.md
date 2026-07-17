@@ -7,6 +7,7 @@ RattanHandmade adalah aplikasi basis data penjualan produk kayu, rotan, dan sint
 - Autentikasi customer dengan Laravel Breeze.
 - Autentikasi admin menggunakan guard khusus `admin`.
 - CRUD produk oleh admin.
+- Upload dan tampilan gambar produk.
 - Kategori produk.
 - Keranjang belanja per customer.
 - Checkout dengan validasi stok dan database transaction.
@@ -42,6 +43,7 @@ RattanHandmade adalah aplikasi basis data penjualan produk kayu, rotan, dan sint
 - `admins`: data pengelola aplikasi.
 - `categories`: kategori produk.
 - `products`: data produk dan stok.
+- `products.image_path`: lokasi file gambar produk pada storage publik.
 - `carts`: keranjang belanja customer.
 - `transactions`: data transaksi utama.
 - `transaction_details`: detail produk dalam transaksi.
@@ -99,6 +101,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate
 php artisan db:seed
+php artisan storage:link
 npm run build
 ```
 
@@ -150,6 +153,12 @@ Jalankan migration dan seeder ulang jika ada perubahan database:
 ```bash
 php artisan migrate
 php artisan db:seed
+```
+
+Jika fitur gambar produk belum tampil setelah clone di perangkat baru, jalankan:
+
+```bash
+php artisan storage:link
 ```
 
 ## Debugging dan Evaluasi Kualitas

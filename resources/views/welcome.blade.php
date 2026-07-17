@@ -60,6 +60,7 @@
         .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; width: 100%; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #EFC480; }
         
+        .product-img { width: 100%; height: 220px; object-fit: cover; display: block; background-color: #f3f4f6; }
         .product-img-placeholder { height: 220px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
         .product-content { padding: 24px; flex: 1; display: flex; flex-direction: column; }
         
@@ -147,9 +148,13 @@
         <div class="product-grid">
             @forelse($products as $product)
                 <div class="product-card">
-                    <div class="product-img-placeholder">
-                        KAYUKRAFT
-                    </div>
+                    @if($product->image_path)
+                        <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="product-img">
+                    @else
+                        <div class="product-img-placeholder">
+                            KAYUKRAFT
+                        </div>
+                    @endif
                     <div class="product-content">
                         <div class="product-category">{{ $product->category->name ?? 'Kategori Umum' }}</div>
                         <h3 class="product-name">{{ $product->name }}</h3>

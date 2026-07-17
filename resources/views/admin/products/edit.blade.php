@@ -53,6 +53,9 @@
         .form-control { width: 100%; padding: 14px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; color: #1f2937; background-color: #f9fafb; transition: all 0.3s ease; outline: none; }
         .form-control:focus { border-color: #8B5A2B; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(139, 90, 43, 0.1); }
         textarea.form-control { resize: vertical; min-height: 120px; }
+        .image-help { font-size: 0.75rem; color: #6b7280; margin-top: 6px; display: block; }
+        .current-image { width: 160px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb; background: #f3f4f6; display: block; margin-bottom: 12px; }
+        .image-placeholder { width: 160px; height: 120px; border-radius: 8px; border: 1px dashed #cbd5e1; color: #6b7280; background: #f9fafb; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; margin-bottom: 12px; }
         
         /* FORM ACTIONS */
         .form-actions { padding: 20px 30px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; }
@@ -122,7 +125,7 @@
                     Perbarui Spesifikasi: {{ $product->name }}
                 </div>
 
-                <form action="{{ route('admin.products.update', $product->id) }}" method="POST">
+                <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT') <div class="form-body">
                         
@@ -155,6 +158,18 @@
                             <label for="price">Harga Jual (Rp) <span style="color:#dc2626">*</span></label>
                             <input type="number" id="price" name="price" class="form-control" min="0" value="{{ old('price', $product->price) }}" required>
                             @error('price') <span class="error-message">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image">Gambar Produk</label>
+                            @if($product->image_path)
+                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="current-image">
+                            @else
+                                <div class="image-placeholder">Belum ada gambar</div>
+                            @endif
+                            <input type="file" id="image" name="image" class="form-control" accept="image/png,image/jpeg,image/jpg,image/webp">
+                            <span class="image-help">Kosongkan jika tidak ingin mengganti gambar. Format JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.</span>
+                            @error('image') <span class="error-message">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">

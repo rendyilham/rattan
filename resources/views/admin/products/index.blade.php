@@ -50,6 +50,9 @@
         .product-name { font-weight: 700; color: #2C4C3B; margin-bottom: 4px; }
         .product-category { font-size: 0.75rem; background: #e5e7eb; color: #4b5563; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
         .product-price { font-weight: 700; color: #8B5A2B; }
+        .product-info { display: flex; align-items: center; gap: 14px; }
+        .product-thumb { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid #e5e7eb; background: #f3f4f6; flex-shrink: 0; }
+        .product-thumb-placeholder { width: 64px; height: 64px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f9fafb; color: #8B5A2B; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; flex-shrink: 0; text-align: center; }
         
         .stock-badge { font-weight: 800; padding: 6px 12px; border-radius: 6px; display: inline-block; text-align: center; min-width: 40px; }
         .stock-good { background-color: #dcfce7; color: #16a34a; }
@@ -145,7 +148,14 @@
                         @forelse($products as $product)
                         <tr>
                             <td>
-                                <div class="product-name">{{ $product->name }}</div>
+                                <div class="product-info">
+                                    @if($product->image_path)
+                                        <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="product-thumb">
+                                    @else
+                                        <div class="product-thumb-placeholder">NO IMG</div>
+                                    @endif
+                                    <div class="product-name">{{ $product->name }}</div>
+                                </div>
                             </td>
                             <td>
                                 <span class="product-category">{{ $product->category->name ?? 'Tanpa Kategori' }}</span>

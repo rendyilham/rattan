@@ -53,6 +53,7 @@
         .form-control { width: 100%; padding: 14px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; color: #1f2937; background-color: #f9fafb; transition: all 0.3s ease; outline: none; }
         .form-control:focus { border-color: #8B5A2B; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(139, 90, 43, 0.1); }
         textarea.form-control { resize: vertical; min-height: 120px; }
+        .image-help { font-size: 0.75rem; color: #6b7280; margin-top: 6px; display: block; }
         
         /* FORM ACTIONS */
         .form-actions { padding: 20px 30px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; }
@@ -123,7 +124,7 @@
                     Formulir Spesifikasi Produk Baru
                 </div>
 
-                <form action="{{ route('admin.products.store') }}" method="POST">
+                <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="form-body">
@@ -158,6 +159,13 @@
                             <input type="number" id="price" name="price" class="form-control" placeholder="Contoh: 150000" min="0" value="{{ old('price') }}" required>
                             <span style="font-size: 0.75rem; color: #6b7280; margin-top: 4px; display: block;">Masukkan angka bulat tanpa titik atau koma.</span>
                             @error('price') <span class="error-message">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image">Gambar Produk</label>
+                            <input type="file" id="image" name="image" class="form-control" accept="image/png,image/jpeg,image/jpg,image/webp">
+                            <span class="image-help">Format JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.</span>
+                            @error('image') <span class="error-message">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">

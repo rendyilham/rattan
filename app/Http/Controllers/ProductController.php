@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -24,16 +25,23 @@ class ProductController extends Controller
     // Memproses data dari form dan menyimpannya ke database
     public function store(Request $request) {
         // Validasi dulu biar admin nggak ngasal masukin data
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        unset($data['image']);
+
         // Simpan ke MySQL
-        Product::create($request->all());
+        Product::create($data);
 
         // Balikin ke halaman daftar produk bawa pesan sukses
         return redirect()->route('admin.products.index')->with('success', 'Asyik, produk baru berhasil ditambahkan ke etalase!');
@@ -47,21 +55,36 @@ class ProductController extends Controller
 
     // Memproses pembaruan data ke database
     public function update(Request $request, Product $product) {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $product->update($request->all());
+        if ($request->hasFile('image')) {
+            if ($product->image_path) {
+                Storage::disk('public')->delete($product->image_path);
+            }
+
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        unset($data['image']);
+
+        $product->update($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Sip, data produk berhasil diperbarui!');
     }
 
     // Menghapus produk (Delete)
     public function destroy(Product $product) {
+        if ($product->image_path) {
+            Storage::disk('public')->delete($product->image_path);
+        }
+
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus dari etalase!');
     }
